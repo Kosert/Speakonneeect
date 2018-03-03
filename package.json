@@ -1,0 +1,31 @@
+{
+    "name": "speakonnect",
+    "version": "1.0.0",
+    "description": "NodeJS VoIP service",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Kosert/Speakonneeect.git"
+    },
+    "contributors": [
+        {
+            "name": "Robert Kosakowski",
+            "email": "robert.kosakowski@student.put.poznan.pl",
+            "url": "https://kosert.me"
+        },
+        {
+            "name": "Gracjan Rutkowski",
+            "email": "gracjan.rutkowski@student.put.poznan.pl",
+            "url": ""
+        }
+    ],
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/Kosert/Speakonneeect/issues"
+    },
+    "homepage": "https://github.com/Kosert/Speakonneeect#readme"
+}
