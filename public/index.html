@@ -7,9 +7,10 @@
     <title>Speakonnect</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
     <script src="/js/index.js"></script>
+    <script src="/js/chat.js"></script>    
 </head>
 
 <body>
@@ -57,11 +58,10 @@
         <div class="mt-2">
 
             <div class="rounded border">
-                <ul class="list-unstyled">
-                    <li class="px-2">Connected!</li>
+                <ul id="chat" class="list-unstyled" style="height:200px;overflow: auto">
                 </ul>
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Enter command">
+                    <input type="text" class="form-control" autocomplete="off" placeholder="Enter command or message">
                     <div class="input-group-append">
                         <button class="btn btn-outline-dark" type="button">Send</button>
                     </div>
