@@ -1,5 +1,5 @@
 function initializeSocket() {
-    var socket = io()
+    socket = io()
 
     socket.on('connect', function () {
         chat.append("Connected with Id=<b>" + socket.id + "</b>")
@@ -32,13 +32,9 @@ function initializeSocket() {
     socket.on('message', function(userId, message){
         chat.append("<b>" + userId + "</b>: " + message)
     })
-
-    socketController.socket = socket
 }
 
 var socketController = {
-
-    socket = undefined,
 
     joinChannel: function (channelId)
     {

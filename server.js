@@ -57,8 +57,10 @@ io.on('connection', function (socket) {
 
             var channelUsers = []
             userList.forEach(element => {
-                if(element.channel.id == channelId)
+                if(element.channel){
+                    if(element.channel.id == channelId)
                     channelUsers.push(element.userId)
+                }
             })
 
             io.emit('channel_update_list', config.getConfig.channels)
