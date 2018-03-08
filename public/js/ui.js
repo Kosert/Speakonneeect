@@ -96,20 +96,36 @@ var channels = {
         p.innerHTML = name + id + users
     },
 
-    updateUserList: function(userList) {
+    userList: [],
+
+    updateUserList: function(newList) {
+        this.userList = newList
+        this.refreshUserList()
+    },
+
+    refreshUserList: function(){
         var ul = document.getElementById("userList")
         ul.innerHTML = ''
-        userList.forEach(user => {
+        this.userList.forEach(user => {
             var li = this.createUserElement(user)
             ul.appendChild(li)
         })
     },
+    
+    userListRemove: function(userId){
+        var removeIndex = this.userList.findIndex(element => {
+            return userId == element.userId
+        })
 
+        this.userList.splice(removeIndex, 1)
+        this.refreshUserList()
+    },
+  
     createUserElement: function (user) {
         var li = document.createElement('li')
         li.classList.add("list-group-item", "d-flex", "justify-content-between", "align-items-center", "list-group-item-action")
 
-        var nameNode = document.createTextNode(user)
+        var nameNode = document.createTextNode(user.userId)
         li.appendChild(nameNode)
 
         return li

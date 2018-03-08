@@ -25,7 +25,6 @@ var userList = []
 
 io.on('connection', function (socket) {
     console.log(socket.client.id, '- connected')
-    //TODO IO.EMIT CONNECT
 
     var user = {
         userId: socket.client.id,
@@ -34,6 +33,7 @@ io.on('connection', function (socket) {
 
     userList.push(user)
 
+    io.emit('user_connected', user.userId)
     socket.emit('channel_update_list', config.getConfig.channels)
     socket.emit('channel_default', config.getConfig.default_channel_id)
 
@@ -45,7 +45,7 @@ io.on('connection', function (socket) {
 
         if (channel) {
             if (user.channel) {
-                //io.to(user.channel.id).emit('channel_left')
+                io.to(user.channel.id).emit('channel_left', user.userId)
                 socket.leave(user.channel.id)
                 user.channel.users--
                 user.channel = undefined
@@ -59,7 +59,7 @@ io.on('connection', function (socket) {
             userList.forEach(element => {
                 if(element.channel){
                     if(element.channel.id == channelId)
-                    channelUsers.push(element.userId)
+                    channelUsers.push(element)
                 }
             })
 
@@ -79,6 +79,7 @@ io.on('connection', function (socket) {
         console.log(user.userId, '- disconnected')
 
         if (user.channel) {
+            io.to(user.channel.id).emit('channel_left', user.userId)
             socket.leave(user.channel.id)
             user.channel.users--
             user.channel = undefined
@@ -90,6 +91,6 @@ io.on('connection', function (socket) {
         userList.splice(userIndex, 1)
 
         io.emit('channel_update_list', config.getConfig.channels)
-        //io.emit('user_disconnected')
+        io.emit('user_disconnected', user.userId)
     });
 })

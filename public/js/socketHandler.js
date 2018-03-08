@@ -1,10 +1,14 @@
 function initializeSocket() {
     socket = io()
+    socketController.socket = socket
 
-    socket.on('connect', function () {
-        chat.append("Connected with Id=<b>" + socket.id + "</b>")
+    socket.on('user_connected', function (userId) {
+        chat.append("User <b>" + userId + "</b> connected.")
     })
 
+    socket.on('user_disconnected', function (userId) {
+        chat.append("User <b>" + userId + "</b> disconnected.")
+    })
     socket.on('channel_update_list', function (newList) {
         channels.updateList(newList)
     })
@@ -29,12 +33,19 @@ function initializeSocket() {
         chat.append("User <b>" + userId + "</b> joined <b>" + channels.getChannel(channelId).name + "</b>")
     })
 
+    socket.on('channel_left', function(userId){
+        channels.userListRemove(userId)
+        chat.append("User <b>" + userId + "</b> left your channel.")
+    })
+
     socket.on('message', function(userId, message){
         chat.append("<b>" + userId + "</b>: " + message)
     })
 }
 
 var socketController = {
+
+    socket: undefined,
 
     joinChannel: function (channelId)
     {
