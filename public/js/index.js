@@ -37,7 +37,7 @@ function changeUserName() {
     }
     var newUserName = prompt("Please enter your name", oldUserName);
 
-    if (newUserName && newUserName.length < 16) {
+    if (newUserName && newUserName.length < 16 && newUserName != oldUserName) {
         socketController.setName(newUserName)
         localStorage.userName = newUserName
     }
