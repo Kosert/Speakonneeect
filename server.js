@@ -30,12 +30,27 @@ io.on('connection', function (socket) {
         userId: socket.client.id,
         channel: undefined
     }
+    if(socket.handshake.query.name)
+    {
+        user.name = socket.handshake.query.name
+    }
 
     userList.push(user)
 
-    io.emit('user_connected', user.userId)
+    io.emit('user_connected', { 
+        userId: user.userId,
+        name: user.name
+    })
     socket.emit('channel_update_list', config.getConfig.channels)
     socket.emit('channel_default', config.getConfig.default_channel_id)
+
+    socket.on('request_name', function(name){
+        if(name && name.length < 16)
+        {
+            user.name = name
+            io.emit('name_set', {userId: user.userId, name: user.name})
+        }
+    })
 
     socket.on('join_channel', function (channelId) {
 
@@ -45,8 +60,8 @@ io.on('connection', function (socket) {
 
         if (channel) {
             if (user.channel) {
-                io.to(user.channel.id).emit('channel_left', user.userId)
                 socket.leave(user.channel.id)
+                io.to(user.channel.id).emit('channel_left', {userId: user.userId, name: user.name})                
                 user.channel.users--
                 user.channel = undefined
             }
@@ -64,7 +79,7 @@ io.on('connection', function (socket) {
             })
 
             io.emit('channel_update_list', config.getConfig.channels)
-            io.emit('channel_joined', user.userId, channel.id, channelUsers)
+            io.emit('channel_joined', {userId: user.userId, name: user.name}, channel.id, channelUsers)
         }
         else {
             console.log("error - invalid channelId")
@@ -72,15 +87,15 @@ io.on('connection', function (socket) {
     })
 
     socket.on('message', function(message){
-        io.to(user.channel.id).emit('message', user.userId, message)
+        io.to(user.channel.id).emit('message', {userId: user.userId, name: user.name}, message)
     })
 
     socket.on('disconnect', function () {
         console.log(user.userId, '- disconnected')
 
         if (user.channel) {
-            io.to(user.channel.id).emit('channel_left', user.userId)
             socket.leave(user.channel.id)
+            io.to(user.channel.id).emit('channel_left', {userId: user.userId, name: user.name})
             user.channel.users--
             user.channel = undefined
         }
@@ -91,6 +106,6 @@ io.on('connection', function (socket) {
         userList.splice(userIndex, 1)
 
         io.emit('channel_update_list', config.getConfig.channels)
-        io.emit('user_disconnected', user.userId)
+        io.emit('user_disconnected', {userId: user.userId, name: user.name})
     });
 })

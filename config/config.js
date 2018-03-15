@@ -2,15 +2,15 @@ var fs = require('fs')
 
 //defaults:
 var config = {
-    default_channel_id: "0",
+    default_channel_id: "234",
     channels: [
         {   
-            id: "0",
+            id: "234",
             name: "Default channel",
             users: 0
         },
         {   
-            id: "1",
+            id: "345",
             name: "Pokoik 1",
             users: 0
         }

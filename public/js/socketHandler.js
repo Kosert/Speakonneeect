@@ -1,13 +1,25 @@
 function initializeSocket() {
-    socket = io()
+
+    var options = {}
+
+    if(localStorage.userName)
+    {
+       options.query = {
+           name: localStorage.userName
+       }
+    }
+
+    var socket = io(window.location.href, options)
     socketController.socket = socket
 
-    socket.on('user_connected', function (userId) {
-        chat.append("User <b>" + userId + "</b> connected.")
+    socket.on('user_connected', function (user) {
+        var name = getUserName(user)
+        chat.append("User <b>" + name + "</b> connected.")      
     })
 
-    socket.on('user_disconnected', function (userId) {
-        chat.append("User <b>" + userId + "</b> disconnected.")
+    socket.on('user_disconnected', function (user) {
+        var name = getUserName(user)
+        chat.append("User <b>" + name + "</b> disconnected.")
     })
     socket.on('channel_update_list', function (newList) {
         channels.updateList(newList)
@@ -17,9 +29,9 @@ function initializeSocket() {
         socket.emit('join_channel', channelId)
     })
 
-    socket.on('channel_joined', function(userId, channelId, userList){
+    socket.on('channel_joined', function(user, channelId, userList){
 
-        if(socket.id == userId)
+        if(socket.id == user.userId)
         {
             channels.currentChannelId = channelId
             channels.refreshCurrentChannel()
@@ -30,16 +42,29 @@ function initializeSocket() {
             channels.refreshChannelDetails()
             channels.updateUserList(userList)
         }
-        chat.append("User <b>" + userId + "</b> joined <b>" + channels.getChannel(channelId).name + "</b>")
+        var name = getUserName(user)
+        chat.append("User <b>" + name + "</b> joined <b>" + channels.getChannel(channelId).name + "</b>")
     })
 
-    socket.on('channel_left', function(userId){
-        channels.userListRemove(userId)
-        chat.append("User <b>" + userId + "</b> left your channel.")
+    socket.on('channel_left', function(user){
+        channels.userListRemove(user.userId)
+        var name = getUserName(user)
+        chat.append("User <b>" + name + "</b> left your channel.")
     })
 
-    socket.on('message', function(userId, message){
-        chat.append("<b>" + userId + "</b>: " + message)
+    socket.on('message', function(user, message){
+        var name = getUserName(user)
+        chat.append("<b>" + name + "</b>: " + message)
+    })
+
+    socket.on('name_set', function(user){
+        var previous = channels.getUser(user.userId)
+
+        var previousName = getUserName(previous)
+
+        previous.name = user.name
+        chat.append("<b>" + previousName + "</b> set his name to <b>" + user.name + "</b>")
+        channels.refreshUserList()
     })
 }
 
@@ -49,11 +74,19 @@ var socketController = {
 
     joinChannel: function (channelId)
     {
-        socket.emit('join_channel', channelId)
+        this.socket.emit('join_channel', channelId)
     },
     
     sendMessage: function (message)
     {
-        socket.emit('message', message)
+        this.socket.emit('message', message)
+    },
+
+    setName: function (newName)
+    {
+        if(this.socket)
+        {
+            this.socket.emit('request_name', newName)
+        }
     }
 }

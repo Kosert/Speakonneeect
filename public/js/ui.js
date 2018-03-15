@@ -98,6 +98,13 @@ var channels = {
 
     userList: [],
 
+    getUser: function(userId){
+        var index = this.userList.findIndex(element => {
+            return userId == element.userId
+        })
+        return this.userList[index]
+    },
+
     updateUserList: function(newList) {
         this.userList = newList
         this.refreshUserList()
@@ -125,7 +132,11 @@ var channels = {
         var li = document.createElement('li')
         li.classList.add("list-group-item", "d-flex", "justify-content-between", "align-items-center", "list-group-item-action")
 
-        var nameNode = document.createTextNode(user.userId)
+        var name = ""
+        if(user.name) name = user.name
+        else name = user.userId
+
+        var nameNode = document.createTextNode(name)
         li.appendChild(nameNode)
 
         return li
