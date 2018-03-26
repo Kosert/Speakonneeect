@@ -61,8 +61,9 @@ var channels = {
 
         li.setAttribute("data-id", channel.id)
 
-        li.addEventListener("click", function () {
-            socketController.joinChannel(channel.id)
+        li.addEventListener("click", function () {  
+            if(channels.currentChannelId != channel.id)
+                socketController.joinChannel(channel.id)
         })
 
         return li

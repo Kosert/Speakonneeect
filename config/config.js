@@ -9,7 +9,7 @@ var config = {
             name: "Default channel",
             users: 0
         },
-        {   
+        {
             id: "345",
             name: "Pokoik 1",
             users: 0
@@ -17,7 +17,25 @@ var config = {
     ]
 }
 
+function channelList() {
+
+    var list = []
+    config.channels.forEach((element, index) => {
+        list.push({
+            id: element.id,
+            name: element.name,
+            users: element.users,
+        })
+    })
+    return list
+}
+
 function save() {
+    var toSave = Object.assign({}, config)
+    toSave.channels.forEach((element, index) => {
+        delete element.users
+    })
+
     var json = JSON.stringify(config)
     fs.writeFileSync('config.json', json, { encoding: 'utf8' })
 }
@@ -27,11 +45,17 @@ function load() {
         save()
     }
     var contents = fs.readFileSync('config.json', 'utf8')
-    config = JSON.parse(contents)
+    Object.keys(config).forEach((key) => { delete config[key] })
+
+    Object.assign(config, JSON.parse(contents))
+    config.channels.forEach((element, index) => {
+        element.users = 0
+    })
 }
 
 module.exports = {
     saveConfig: save,
     loadConfig: load,
-    getConfig: config
+    getConfig: config,
+    getChannelList: channelList
 }

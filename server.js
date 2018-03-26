@@ -1,4 +1,5 @@
 var path = require('path')
+var crypto = require('crypto')
 
 var express = require('express')
 var morgan = require('morgan')
@@ -17,8 +18,13 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '/public', 'index.html'))
 })
 
+var adminToken = ""
 server.listen(80, () => {
     console.log('Server started')
+    crypto.randomBytes(48, (err, buff) => {
+        adminToken = buff.toString('hex')
+        console.log("New adminToken: " + adminToken)
+    })
 })
 
 var userList = []
@@ -41,7 +47,7 @@ io.on('connection', function (socket) {
         userId: user.userId,
         name: user.name
     })
-    socket.emit('channel_update_list', config.getConfig.channels)
+    socket.emit('channel_update_list', config.getChannelList())
 
     if(socket.handshake.query.channel)
         socket.emit('channel_default', socket.handshake.query.channel)
@@ -82,7 +88,7 @@ io.on('connection', function (socket) {
                 }
             })
 
-            io.emit('channel_update_list', config.getConfig.channels)
+            io.emit('channel_update_list', config.getChannelList())
             io.emit('channel_joined', {userId: user.userId, name: user.name}, channel.id, channelUsers)
         }
         else {
@@ -109,7 +115,7 @@ io.on('connection', function (socket) {
         })
         userList.splice(userIndex, 1)
 
-        io.emit('channel_update_list', config.getConfig.channels)
+        io.emit('channel_update_list', config.getChannelList())
         io.emit('user_disconnected', {userId: user.userId, name: user.name})
     });
 })
