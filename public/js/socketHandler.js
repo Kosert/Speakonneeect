@@ -1,15 +1,20 @@
 function initializeSocket() {
 
-    var options = {}
+    var options = { query: {} }
 
     if(localStorage.userName)
     {
-       options.query = {
-           name: localStorage.userName
-       }
+       options.query.name = localStorage.userName
     }
 
-    var socket = io(window.location.href, options)
+    var channelParameter = getQueryParameter("channel")
+    if(channelParameter)
+    {
+       options.query.channel = channelParameter
+    }
+
+    var url = [location.protocol, '//', location.host, location.pathname].join('');
+    var socket = io(url, options)
     socketController.socket = socket
 
     socket.on('user_connected', function (user) {

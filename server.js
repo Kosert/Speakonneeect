@@ -42,7 +42,11 @@ io.on('connection', function (socket) {
         name: user.name
     })
     socket.emit('channel_update_list', config.getConfig.channels)
-    socket.emit('channel_default', config.getConfig.default_channel_id)
+
+    if(socket.handshake.query.channel)
+        socket.emit('channel_default', socket.handshake.query.channel)
+    else
+        socket.emit('channel_default', config.getConfig.default_channel_id)
 
     socket.on('request_name', function(name){
         if(name && name.length < 16)
