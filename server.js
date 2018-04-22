@@ -1,5 +1,6 @@
 var path = require('path')
 var crypto = require('crypto')
+var fs = require('fs')
 
 var express = require('express')
 var morgan = require('morgan')
@@ -8,23 +9,30 @@ var app = express()
 var config = require('./config/config')
 config.loadConfig()
 
-var server = require('http').createServer(app)
+var httpsOptions = {
+    regular: {
+        key: fs.readFileSync(config.getConfig.httpsOptions.key),
+        cert: fs.readFileSync(config.getConfig.httpsOptions.cert)
+    },
+    admin: {
+        key: fs.readFileSync(config.getConfig.httpsOptions.key),
+        cert: fs.readFileSync(config.getConfig.httpsOptions.cert),
+        requestCert: true,
+        rejectUnauthorized: false
+    }
+}
+var server = require('https').createServer(httpsOptions.regular, app)
 var io = require('socket.io')(server)
 
 app.use(express.static(path.join(__dirname + '/public')))
 app.use(morgan('dev'))
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '/public', 'index.html'))
+    res.sendFile(path.join(__dirname, '/html', 'index.html'))
 })
 
-var adminToken = ""
-server.listen(80, () => {
+server.listen(8080, () => {
     console.log('Server started')
-    crypto.randomBytes(48, (err, buff) => {
-        adminToken = buff.toString('hex')
-        console.log("New adminToken: " + adminToken)
-    })
 })
 
 var userList = []
@@ -119,3 +127,56 @@ io.on('connection', function (socket) {
         io.emit('user_disconnected', {userId: user.userId, name: user.name})
     });
 })
+
+var adminHtml = fs.readFileSync(path.join(__dirname, "/html", "/admin.html"), { encoding: "utf8" })
+
+var adminServer = require('https').createServer(httpsOptions.admin, function (req, res) { 
+    console.log("Hello there", req.url)
+
+    //TODO check cert and authenticate
+
+    var filePath = ""
+
+    switch(req.url)
+    {
+        case '/':
+            filePath = path.join(__dirname, "/html", "/admin.html")
+            res.writeHead(200, {"Content-Type": "text/html"})
+            res.end(adminHtml)
+            break
+        case '/js/index.js':
+            filePath = path.join(__dirname, "/admin", "/js", "/index.js")
+            res.writeHead(200, {"Content-Type": "text/javascript"})
+            break
+        case '/js/socketHandler.js':
+            filePath = path.join(__dirname, "/admin", "/js", "/socketHandler.js")
+            res.writeHead(200, {"Content-Type": "text/javascript"})
+            break
+        case '/js/ui.js':
+            filePath = path.join(__dirname, "/admin", "/js", "/ui.js")
+            res.writeHead(200, {"Content-Type": "text/javascript"})
+            break
+        case '/img/favicon.ico':
+            filePath = path.join(__dirname, "/admin", "/img", "/favicon.ico")
+            res.writeHead(200, {"Content-Type": "image/x-icon"})
+            break
+        default:
+            res.writeHead(404)
+            res.end()
+            console.log(req.url, "ERR - PATH NOT RECOGNIZED")
+            break
+    }
+    if(!filePath) return
+
+    fs.readFile(filePath, function(err, data) {
+        if (!err) {
+            res.end(data)
+            console.log(req.url, "SUCCESS")
+        } else {
+            res.writeHead(404)
+            res.end()
+            console.log(req.url, "ERROR")
+        }
+    })
+})
+adminServer.listen(8443)

@@ -2,9 +2,13 @@ var fs = require('fs')
 
 //defaults:
 var config = {
+    httpsOptions: {
+        key: "cert/cert_key.key",
+        cert: "cert/cert_crt.crt"
+    },
     default_channel_id: "234",
     channels: [
-        {   
+        {
             id: "234",
             name: "Default channel",
             users: 0
