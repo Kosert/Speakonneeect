@@ -7,37 +7,41 @@
     <title>Speakonnect</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
     <script src="/js/index.js"></script>
     <script src="/js/ui.js"></script>
     <script src="/js/socketHandler.js"></script>
     <script src="/js/voip.js"></script>
     <script src="/js/audiorecorder.min.js"></script>
-    <style>.channel-element { cursor: pointer; }</style>
+    <style>
+        .channel-element {
+            cursor: pointer;
+        }
+
+        .custom-control-input:focus~.custom-control-label::before {
+            box-shadow: 0 0 0 1px #ffffff, 0 0 0 0.2rem #343a4080;
+        }
+
+        .form-control:focus {
+            border-color: #343a40;
+            box-shadow: 0 0 0 0.2rem #343a4080
+        }
+    </style>
 </head>
 
 <body>
-
-    <div class="jumbotron jumbotron-fluid pb-0">
+    <div class="jumbotron jumbotron-fluid pb-0" style="position:relative;padding-top:400px">
         <div class="container">
-            <h1 class="display-4">Speakonneeect</h1>
-            <p class="lead">NodeJS VoIP service</p>
+            <img src="/img/logo.png" style="position: absolute;bottom:0px;width:80%;right:10%;">
         </div>
-        <nav class="navbar navbar-expand navbar-light" style="background-color:transparent;">
-            <div class="container">
-                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                    <div class="navbar-nav mx-0 mx-sm-3">
-                        <a id="buttonUsername" class="btn btn-dark mr-1 mr-sm-2" href="#">Set Name</a>
-                        <a class="btn btn-outline-dark mr-1 mr-sm-2" href="https://github.com/Kosert/Speakonneeect" target="_blank">GitHub</a>
-                    </div>
-                </div>
-            </div>
-        </nav>
     </div>
-
     <div class="container border rounded p-2">
-
+        <div class="row mx-0" style="position: relative;">
+            <a id="buttonUsername" class="btn btn-outline-dark mr-1" href="#">Set Name</a>
+            <a class="btn btn-dark mr-1" href="https://github.com/Kosert/Speakonneeect" target="_blank" style="position: absolute;right:0">Check it out at GitHub</a>
+        </div>
         <div class="row">
             <div class="col-md-6">
                 <p>Room list:</p>
@@ -54,10 +58,7 @@
                 </p>
             </div>
         </div>
-
-
         <div class="mt-2">
-
             <div class="rounded border">
                 <ul id="chat" class="list-unstyled" style="height:200px;overflow: auto">
                 </ul>
@@ -69,10 +70,7 @@
                 </div>
             </div>
         </div>
-
-
     </div>
-
 </body>
 
 </html>
