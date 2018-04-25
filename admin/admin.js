@@ -1,0 +1,1 @@
+var isAdmin = true
