@@ -135,12 +135,12 @@ var adminHtml = fs.readFileSync(path.join(__dirname, "/html", "/admin.html"), { 
 
 var adminServer = require('https').createServer(httpsOptions.admin, function (req, res) {
     //TODO check cert and authenticate
-
-    console.log(req.socket.getPeerCertificate())
+    //req.socket.getPeerCertificate()
+    
     var filePath = ""
-
     switch (req.url) {
         case '/':
+            console.log(req.socket.getPeerCertificate())        
             filePath = path.join(__dirname, "/html", "/admin.html")
             res.writeHead(200, { "Content-Type": "text/html" })
             res.end(adminHtml)
@@ -159,6 +159,10 @@ var adminServer = require('https').createServer(httpsOptions.admin, function (re
             break
         case '/js/voip.js':
             filePath = path.join(__dirname, "/public", "/js", "/voip.js")
+            res.writeHead(200, { "Content-Type": "text/javascript" })
+            break
+        case '/js/admin.js':
+            filePath = path.join(__dirname, "/admin", "/js", "/admin.js")
             res.writeHead(200, { "Content-Type": "text/javascript" })
             break
         case '/js/audiorecorder.min.js':
