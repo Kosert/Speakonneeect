@@ -146,20 +146,32 @@ var adminServer = require('https').createServer(httpsOptions.admin, function (re
             res.end(adminHtml)
             break
         case '/js/index.js':
-            filePath = path.join(__dirname, "/admin", "/js", "/index.js")
+            filePath = path.join(__dirname, "/public", "/js", "/index.js")
             res.writeHead(200, { "Content-Type": "text/javascript" })
             break
         case '/js/socketHandler.js':
-            filePath = path.join(__dirname, "/admin", "/js", "/socketHandler.js")
+            filePath = path.join(__dirname, "/public", "/js", "/socketHandler.js")
             res.writeHead(200, { "Content-Type": "text/javascript" })
             break
         case '/js/ui.js':
-            filePath = path.join(__dirname, "/admin", "/js", "/ui.js")
+            filePath = path.join(__dirname, "/public", "/js", "/ui.js")
+            res.writeHead(200, { "Content-Type": "text/javascript" })
+            break
+        case '/js/audiorecorder.min.js':
+            filePath = path.join(__dirname, "/public", "/js", "/audiorecorder.min.js")
+            res.writeHead(200, { "Content-Type": "text/javascript" })
+            break
+        case '/js/worker.min.js':
+            filePath = path.join(__dirname, "/public", "/js", "/worker.min.js")
             res.writeHead(200, { "Content-Type": "text/javascript" })
             break
         case '/img/favicon.ico':
-            filePath = path.join(__dirname, "/admin", "/img", "/favicon.ico")
+            filePath = path.join(__dirname, "/public", "/img", "/favicon.ico")
             res.writeHead(200, { "Content-Type": "image/x-icon" })
+            break
+        case '/img/logo.png':
+            filePath = path.join(__dirname, "/public", "/img", "/logo.png")
+            res.writeHead(200, { "Content-Type": "image/png" })
             break
         default:
             res.writeHead(404)
