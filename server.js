@@ -10,21 +10,14 @@ var config = require('./config/config')
 config.loadConfig()
 
 var httpsOptions = {
-    regular: {
-        key: fs.readFileSync(config.getConfig.httpsOptions.key),
-        cert: fs.readFileSync(config.getConfig.httpsOptions.cert)
-    },
-    admin: {
-        key: fs.readFileSync(config.getConfig.httpsOptions.key),
-        cert: fs.readFileSync(config.getConfig.httpsOptions.cert),
-        requestCert: true,
-        rejectUnauthorized: false
-    }
+    key: fs.readFileSync(config.getConfig.httpsOptions.key),
+    cert: fs.readFileSync(config.getConfig.httpsOptions.cert)
 }
-var server = require('https').createServer(httpsOptions.regular, app)
+
+var server = require('https').createServer(httpsOptions, app)
 var io = require('socket.io')(server)
 
-app.use(express.static(path.join(__dirname + '/public')))
+app.use(express.static(path.join(__dirname, '/public')))
 app.use(morgan('dev'))
 
 app.get('/', (req, res) => {
@@ -107,7 +100,7 @@ io.on('connection', function (socket) {
     })
 
     socket.on('clientSendBuffor', function (data) {
-        if(!user.channel) return
+        if (!user.channel) return
         socket.to(user.channel.id).emit('serverSendBuffor', data)
     })
 
@@ -131,72 +124,5 @@ io.on('connection', function (socket) {
     });
 })
 
-var adminHtml = fs.readFileSync(path.join(__dirname, "/html", "/admin.html"), { encoding: "utf8" })
-
-var adminServer = require('https').createServer(httpsOptions.admin, function (req, res) {
-    //TODO check cert and authenticate
-    //req.socket.getPeerCertificate()
-    
-    var filePath = ""
-    switch (req.url) {
-        case '/':
-            console.log(req.socket.getPeerCertificate())        
-            filePath = path.join(__dirname, "/html", "/admin.html")
-            res.writeHead(200, { "Content-Type": "text/html" })
-            res.end(adminHtml)
-            break
-        case '/js/index.js':
-            filePath = path.join(__dirname, "/public", "/js", "/index.js")
-            res.writeHead(200, { "Content-Type": "text/javascript" })
-            break
-        case '/js/socketHandler.js':
-            filePath = path.join(__dirname, "/public", "/js", "/socketHandler.js")
-            res.writeHead(200, { "Content-Type": "text/javascript" })
-            break
-        case '/js/ui.js':
-            filePath = path.join(__dirname, "/public", "/js", "/ui.js")
-            res.writeHead(200, { "Content-Type": "text/javascript" })
-            break
-        case '/js/voip.js':
-            filePath = path.join(__dirname, "/public", "/js", "/voip.js")
-            res.writeHead(200, { "Content-Type": "text/javascript" })
-            break
-        case '/js/admin.js':
-            filePath = path.join(__dirname, "/admin", "/js", "/admin.js")
-            res.writeHead(200, { "Content-Type": "text/javascript" })
-            break
-        case '/js/audiorecorder.min.js':
-            filePath = path.join(__dirname, "/public", "/js", "/audiorecorder.min.js")
-            res.writeHead(200, { "Content-Type": "text/javascript" })
-            break
-        case '/js/worker.min.js':
-            filePath = path.join(__dirname, "/public", "/js", "/worker.min.js")
-            res.writeHead(200, { "Content-Type": "text/javascript" })
-            break
-        case '/img/favicon.ico':
-            filePath = path.join(__dirname, "/public", "/img", "/favicon.ico")
-            res.writeHead(200, { "Content-Type": "image/x-icon" })
-            break
-        case '/img/logo.png':
-            filePath = path.join(__dirname, "/public", "/img", "/logo.png")
-            res.writeHead(200, { "Content-Type": "image/png" })
-            break
-        default:
-            res.writeHead(404)
-            res.end()
-            console.log(req.url, "ERR - PATH NOT RECOGNIZED")
-            break
-    }
-    if (!filePath) return
-
-    fs.readFile(filePath, function (err, data) {
-        if (!err) {
-            res.end(data)
-        } else {
-            res.writeHead(404)
-            res.end()
-            console.log(req.url, "ERROR")
-        }
-    })
-})
-adminServer.listen(8443)
+var fork = require('child_process').fork
+var adminServer = fork(__dirname + '/adminServer.js')
