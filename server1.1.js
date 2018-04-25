@@ -34,6 +34,9 @@ var io  = require('socket.io').listen(server, { log: false });
 
 io.sockets.on('connect', function (socket) {  
 
+	console.log("huj");
+	
+	
 	socket.on('clientSendBuffor', function (data) {
 				
 		socket.broadcast.emit('serverSendBuffor', data); 
