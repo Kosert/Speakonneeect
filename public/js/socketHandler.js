@@ -11,7 +11,8 @@ function initializeSocket() {
         options.query.channel = channelParameter
     }
 
-    var url = [location.protocol, '//', location.host, location.pathname].join('');
+    //var url = [location.protocol, '//', location.host, location.pathname].join('');
+    var url = "https://localhost:8080"
     var socket = io(url, options)
     socketController.socket = socket
 
