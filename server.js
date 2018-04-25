@@ -157,6 +157,10 @@ var adminServer = require('https').createServer(httpsOptions.admin, function (re
             filePath = path.join(__dirname, "/public", "/js", "/ui.js")
             res.writeHead(200, { "Content-Type": "text/javascript" })
             break
+        case '/js/voip.js':
+            filePath = path.join(__dirname, "/public", "/js", "/voip.js")
+            res.writeHead(200, { "Content-Type": "text/javascript" })
+            break
         case '/js/audiorecorder.min.js':
             filePath = path.join(__dirname, "/public", "/js", "/audiorecorder.min.js")
             res.writeHead(200, { "Content-Type": "text/javascript" })
