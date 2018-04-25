@@ -27,6 +27,8 @@ window.onload = function () {
         sendContent.value = ""
     })
 
+    initVoip()
+
     console.log('Init completed')
 }
 
