@@ -18,7 +18,7 @@ var chat = {
         this.updateScroll()
     },
 
-    updateScroll: function(){
+    updateScroll: function () {
         var element = document.getElementById("chat");
         element.scrollTop = element.scrollHeight;
     }
@@ -61,8 +61,8 @@ var channels = {
 
         li.setAttribute("data-id", channel.id)
 
-        li.addEventListener("click", function () {  
-            if(channels.currentChannelId != channel.id)
+        li.addEventListener("click", function () {
+            if (channels.currentChannelId != channel.id)
                 socketController.joinChannel(channel.id)
         })
 
@@ -99,19 +99,19 @@ var channels = {
 
     userList: [],
 
-    getUser: function(userId){
+    getUser: function (userId) {
         var index = this.userList.findIndex(element => {
             return userId == element.userId
         })
         return this.userList[index]
     },
 
-    updateUserList: function(newList) {
+    updateUserList: function (newList) {
         this.userList = newList
         this.refreshUserList()
     },
 
-    refreshUserList: function(){
+    refreshUserList: function () {
         var ul = document.getElementById("userList")
         ul.innerHTML = ''
         this.userList.forEach(user => {
@@ -119,8 +119,8 @@ var channels = {
             ul.appendChild(li)
         })
     },
-    
-    userListRemove: function(userId){
+
+    userListRemove: function (userId) {
         var removeIndex = this.userList.findIndex(element => {
             return userId == element.userId
         })
@@ -128,18 +128,41 @@ var channels = {
         this.userList.splice(removeIndex, 1)
         this.refreshUserList()
     },
-  
+
     createUserElement: function (user) {
         var li = document.createElement('li')
         li.classList.add("list-group-item", "d-flex", "justify-content-between", "align-items-center", "list-group-item-action")
 
         var name = ""
-        if(user.name) name = user.name
+        if (user.name) name = user.name
         else name = user.userId
 
         var nameNode = document.createTextNode(name)
-        li.appendChild(nameNode)
+        var nameDiv = document.createElement('div')
+        nameDiv.appendChild(nameNode)
 
+        console.log(user)
+        var buttonsDiv = document.createElement('div')
+
+        if (user.isAdmin) {
+            var span = document.createElement('span')
+            span.innerText = "Admin"
+            span.classList.add('badge', 'badge-pill', 'badge-primary', 'ml-2')
+            nameDiv.appendChild(span)
+
+            var muteBadge = document.createElement('a')
+            muteBadge.classList.add('badge', 'badge-warning')
+            muteBadge.innerText = "Mute"
+            muteBadge.href = '#'
+            muteBadge.addEventListener('click', function (e) {
+                e.preventDefault()
+                //tODO socket request client mute
+            })
+            buttonsDiv.appendChild(muteBadge)
+        }
+
+        li.appendChild(nameDiv)
+        li.appendChild(buttonsDiv)
         return li
     }
 }

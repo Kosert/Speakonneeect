@@ -11,7 +11,7 @@ function initializeSocket(resolve, reject) {
         options.query.channel = channelParameter
     }
 
-    if (isAdmin) {
+    if ("isAdmin" in window) {
         send("GET", "/getAdminToken", null, function (response) {
             options.query.adminToken = response.token
             createSocket(options)
@@ -26,9 +26,12 @@ function initializeSocket(resolve, reject) {
 
 function createSocket(options) {
     //var url = [location.protocol, '//', location.host, location.pathname].join('');
+    
     var url = "https://localhost:8080"
     var socket = io(url, options)
     socketController.socket = socket
+
+    currentUser.userId = socket.id
 
     socket.on('user_connected', function (user) {
         var name = getUserName(user)
@@ -58,12 +61,14 @@ function createSocket(options) {
             channels.refreshChannelDetails()
             channels.updateUserList(userList)
         }
+        currentUser.channelId = channelId
         var name = getUserName(user)
         chat.append("User <b>" + name + "</b> joined <b>" + channels.getChannel(channelId).name + "</b>")
     })
 
     socket.on('channel_left', function (user) {
         channels.userListRemove(user.userId)
+        currentUser.channelId = null        
         var name = getUserName(user)
         chat.append("User <b>" + name + "</b> left your channel.")
     })
@@ -77,6 +82,7 @@ function createSocket(options) {
         var previous = channels.getUser(user.userId)
 
         var previousName = getUserName(previous)
+        currentUser.name = user.name
 
         previous.name = user.name
         chat.append("<b>" + previousName + "</b> set his name to <b>" + user.name + "</b>")
