@@ -98,7 +98,11 @@ io.on('connection', function (socket) {
             userList.forEach(element => {
                 if (element.channel) {
                     if (element.channel.id == channelId)
-                        channelUsers.push(element)
+                        channelUsers.push({
+                            "userId": element.userId,
+                            "name": element.name,
+                            "isAdmin": element.isAdmin
+                        })
                 }
             })
 
