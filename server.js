@@ -30,22 +30,37 @@ server.listen(8080, () => {
 
 var userList = []
 
+var fork = require('child_process').fork
+var adminServer = fork(__dirname + '/adminServer.js')
+
+const adminList = []
+
+adminServer.on('message', function (newAdmin) {
+    console.log("new Admin: ", newAdmin)
+    adminList.push(newAdmin)
+})
+
 io.on('connection', function (socket) {
     console.log(socket.client.id, '- connected')
 
     var user = {
         userId: socket.client.id,
-        channel: undefined
+        channel: undefined,
+        isAdmin: false
     }
     if (socket.handshake.query.name) {
         user.name = socket.handshake.query.name
+    }
+    if (socket.handshake.query.adminToken) {
+        user.isAdmin = adminList.includes(socket.handshake.query.adminToken)
     }
 
     userList.push(user)
 
     io.emit('user_connected', {
         userId: user.userId,
-        name: user.name
+        name: user.name,
+        isAdmin: user.isAdmin
     })
     socket.emit('channel_update_list', config.getChannelList())
 
@@ -123,6 +138,3 @@ io.on('connection', function (socket) {
         io.emit('user_disconnected', { userId: user.userId, name: user.name })
     });
 })
-
-var fork = require('child_process').fork
-var adminServer = fork(__dirname + '/adminServer.js')
