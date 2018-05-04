@@ -1,4 +1,4 @@
-function initializeSocket() {
+function initializeSocket(resolve, reject) {
 
     var options = { query: {} }
 
@@ -11,6 +11,20 @@ function initializeSocket() {
         options.query.channel = channelParameter
     }
 
+    if (isAdmin) {
+        send("GET", "/getAdminToken", null, function (response) {
+            options.query.adminToken = response.token
+            createSocket(options)
+            resolve()
+        })
+    }
+    else {
+        createSocket(options)
+        resolve()
+    }
+}
+
+function createSocket(options) {
     //var url = [location.protocol, '//', location.host, location.pathname].join('');
     var url = "https://localhost:8080"
     var socket = io(url, options)

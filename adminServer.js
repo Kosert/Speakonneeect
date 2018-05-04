@@ -29,14 +29,42 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '/html', 'admin.html'))
 })
 
+app.get('/getAdminToken', (req, res) => {
+    if (req.adminKey) {
+        res.json({ "token": req.adminKey })
+    }
+    else {
+        res.json({ "error": "Certificate error" })        
+    }
+})
+
 server.listen(8443, () => {
     console.log('Admin server started')
 })
 
+const adminKeys = []
 
 function checkCert(req, res, next) {
 
+    const cert = req.socket.getPeerCertificate()
+
     //TODO check cert and authenticate
-    //req.socket.getPeerCertificate()
-    next()
+
+    const index = adminKeys.findIndex(element => {
+        return element.fingerprint == cert.figerprint
+    })
+    if (index != -1) {
+        req.adminKey = adminKeys[index].adminKey
+        return next()
+    }
+
+    const newKey = crypto.randomBytes(32).toString('hex')
+    const newAdmin = {
+        "figerprint": cert.figerprint,
+        "adminKey": newKey
+    }
+    adminKeys.push(newAdmin)
+    process.send(newKey)
+    req.adminKey = newKey
+    return next()
 }
