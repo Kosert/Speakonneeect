@@ -141,7 +141,6 @@ var channels = {
         var nameDiv = document.createElement('div')
         nameDiv.appendChild(nameNode)
 
-        console.log(user)
         var buttonsDiv = document.createElement('div')
 
         if (user.isAdmin) {

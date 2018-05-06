@@ -12,7 +12,7 @@ function initializeSocket(resolve, reject) {
     }
 
     if ("isAdmin" in window) {
-        send("GET", "/getAdminToken", null, function (response) {
+        send("GET", "getAdminToken", null, function (response) {
             options.query.adminToken = response.token
             createSocket(options)
             resolve()
