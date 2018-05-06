@@ -26,7 +26,7 @@ function initializeSocket(resolve, reject) {
 
 function createSocket(options) {
     //var url = [location.protocol, '//', location.host, location.pathname].join('');
-    
+
     var url = "https://localhost:8080"
     var socket = io(url, options)
     socketController.socket = socket
@@ -56,19 +56,20 @@ function createSocket(options) {
             channels.currentChannelId = channelId
             channels.refreshCurrentChannel()
             channels.updateUserList(userList)
+            currentUser.channelId = channelId
         }
         else if (channels.currentChannelId == channelId) {
             channels.refreshChannelDetails()
             channels.updateUserList(userList)
         }
-        currentUser.channelId = channelId
         var name = getUserName(user)
         chat.append("User <b>" + name + "</b> joined <b>" + channels.getChannel(channelId).name + "</b>")
     })
 
     socket.on('channel_left', function (user) {
+        if (socket.id == user.userId)
+            currentUser.channelId = null
         channels.userListRemove(user.userId)
-        currentUser.channelId = null        
         var name = getUserName(user)
         chat.append("User <b>" + name + "</b> left your channel.")
     })
@@ -82,7 +83,8 @@ function createSocket(options) {
         var previous = channels.getUser(user.userId)
 
         var previousName = getUserName(previous)
-        currentUser.name = user.name
+        if(socket.id == user.userId)
+            currentUser.name = user.name
 
         previous.name = user.name
         chat.append("<b>" + previousName + "</b> set his name to <b>" + user.name + "</b>")
