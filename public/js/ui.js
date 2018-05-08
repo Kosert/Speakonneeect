@@ -148,7 +148,9 @@ var channels = {
             span.innerText = "Admin"
             span.classList.add('badge', 'badge-pill', 'badge-primary', 'ml-2')
             nameDiv.appendChild(span)
+        }
 
+        if("isAdmin" in window) {
             var muteBadge = document.createElement('a')
             muteBadge.classList.add('badge', 'badge-warning')
             muteBadge.innerText = "Mute"
