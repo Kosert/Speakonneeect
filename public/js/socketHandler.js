@@ -1,4 +1,4 @@
-function initializeSocket() {
+function initializeSocket(resolve, reject) {
 
     var options = { query: {} }
 
@@ -11,9 +11,27 @@ function initializeSocket() {
         options.query.channel = channelParameter
     }
 
-    var url = [location.protocol, '//', location.host, location.pathname].join('');
+    if ("isAdmin" in window) {
+        send("GET", "getAdminToken", null, function (response) {
+            options.query.adminToken = response.token
+            createSocket(options)
+            resolve()
+        })
+    }
+    else {
+        createSocket(options)
+        resolve()
+    }
+}
+
+function createSocket(options) {
+    //var url = [location.protocol, '//', location.host, location.pathname].join('');
+
+    var url = "https://localhost:8080"
     var socket = io(url, options)
     socketController.socket = socket
+
+    currentUser.userId = socket.id
 
     socket.on('user_connected', function (user) {
         var name = getUserName(user)
@@ -38,6 +56,7 @@ function initializeSocket() {
             channels.currentChannelId = channelId
             channels.refreshCurrentChannel()
             channels.updateUserList(userList)
+            currentUser.channelId = channelId
         }
         else if (channels.currentChannelId == channelId) {
             channels.refreshChannelDetails()
@@ -48,6 +67,8 @@ function initializeSocket() {
     })
 
     socket.on('channel_left', function (user) {
+        if (socket.id == user.userId)
+            currentUser.channelId = null
         channels.userListRemove(user.userId)
         var name = getUserName(user)
         chat.append("User <b>" + name + "</b> left your channel.")
@@ -62,6 +83,8 @@ function initializeSocket() {
         var previous = channels.getUser(user.userId)
 
         var previousName = getUserName(previous)
+        if(socket.id == user.userId)
+            currentUser.name = user.name
 
         previous.name = user.name
         chat.append("<b>" + previousName + "</b> set his name to <b>" + user.name + "</b>")
