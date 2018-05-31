@@ -1,7 +1,5 @@
 function initVoip() {
 
-	var socketIO = io();
-
     var config = { 'worker_path': 'js/worker.min.js' }
     AudioRecorder.init(config);
     
@@ -12,7 +10,7 @@ function initVoip() {
 	
 	var id;
 
-	socketIO.on('id_for_client', function (data) {
+	socketController.socket.on('id_for_client', function (data) {
     
         id = data;		
     });
@@ -30,7 +28,7 @@ function initVoip() {
     
             var encodedData = Codec.encode(inputData);
 					
-            socketIO.emit('clientSendBuffor', {id: id, data: encodedData});
+            socketController.socket.emit('clientSendBuffor', {id: id, data: encodedData});
         };
     
         const microphoneStream = stream => {
@@ -49,7 +47,7 @@ function initVoip() {
 	var idList = [];
 	var bufforList = [];
 	
-    socketIO.on('serverSendBuffor', function (data) {
+    socketController.socket.on('serverSendBuffor', function (data) {
 		
 		if(idList.indexOf(data.id) == -1){
 			
