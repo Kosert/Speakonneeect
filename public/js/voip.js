@@ -63,40 +63,40 @@ function initVoip() {
 		}
     });
 	
-	var audioBuffer;
+		var audioBuffer;
 		var audioBufferArray;
 		var frameCount = 4060;
     
 		audioBuffer = audioContext.createBuffer(1, frameCount, 48000);
-	
+		
 	function play(){
 		
-		var encodedData = new Uint8Array(728);
+		var allDecodedData = new Float32Array(4060);
 			
 		for(var j = 0; j < bufforList.length; j++){
 			
+			var encodedData = new Uint8Array(728);			
 			var bufforListPart = bufforList[j];
 			
 			for (var i = 0; i < 728; i++) {
-				encodedData[i] =  encodedData[i] + bufforListPart[i];
-			}	
+				
+				encodedData[i] =  bufforListPart[i];
+			}
+
+			var decodedData = Codec.decode(encodedData);
+					
+			for(var i = 0; i < 4060; i++){
+				
+				allDecodedData[i] = allDecodedData[i] + decodedData[i]
+			}				
 		}
-		
-		if(bufforList.length > 1){
-			
-			for (var i = 0; i < 728; i++) {
-			
-				encodedData[i] =  10 * Math.log10(encodedData[i]);		
-			}	
-		}
-		
-		var decodedData = Codec.decode(encodedData);
 			
 		audioBufferArray = audioBuffer.getChannelData(0);
     
-		for (var i = 0; i < frameCount; i++) {
-			audioBufferArray[i] = decodedData[i] / 10;
-		}
+			for (var i = 0; i < frameCount; i++) {
+				audioBufferArray[i] = allDecodedData[i] / 10;
+			}
+		
 		
 		for (var i = 0; i < 300; i++) {
 				
@@ -110,6 +110,15 @@ function initVoip() {
         source.connect(audioContext.destination);
         source.start();			
 	}
+	
+	
+	if(bufforList.length > 1){
+			
+			for (var i = 0; i < 728; i++) {
+			
+				encodedData[i] =  encodedData[i]/bufforList.length;	
+			}	
+		}
     
     var min = -0.00015;
     var max = 0.00015;
