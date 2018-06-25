@@ -9,12 +9,13 @@ var app = express()
 var config = require('./config/config')
 config.loadConfig()
 
-var httpsOptions = {
-    key: fs.readFileSync(config.getConfig.httpsOptions.key),
-    cert: fs.readFileSync(config.getConfig.httpsOptions.cert)
-}
+//var httpsOptions = {
+//    key: fs.readFileSync(config.getConfig.httpsOptions.key),
+//    cert: fs.readFileSync(config.getConfig.httpsOptions.cert)
+//}
 
-var server = require('https').createServer(httpsOptions, app)
+//var server = require('https').createServer(httpsOptions, app)
+var server = require('http').createServer(app)
 var io = require('socket.io')(server)
 
 app.use(express.static(path.join(__dirname, '/public')))
@@ -30,15 +31,15 @@ server.listen(8080, () => {
 
 var userList = []
 
-var fork = require('child_process').fork
-var adminServer = fork(__dirname + '/adminServer.js')
+//var fork = require('child_process').fork
+//var adminServer = fork(__dirname + '/adminServer.js')
 
 const adminList = []
 
-adminServer.on('message', function (newAdmin) {
-    console.log("new Admin: ", newAdmin)
-    adminList.push(newAdmin)
-})
+//adminServer.on('message', function (newAdmin) {
+ //   console.log("new Admin: ", newAdmin)
+//   adminList.push(newAdmin)
+//})
 
 io.on('connection', function (socket) {
     console.log(socket.client.id, '- connected')
