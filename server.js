@@ -42,11 +42,10 @@ adminServer.on('message', function (newAdmin) {
 
 io.on('connection', function (socket) {
     console.log(socket.client.id, '- connected')
-	var newId = socket.client.id;
-	
-	io.to(newId).emit('id_for_client', newId);
-	
-	
+    //var newId = socket.client.id;	
+    //io.to(newId).emit('id_for_client', newId);
+
+
     var user = {
         userId: socket.client.id,
         channel: undefined,
@@ -124,10 +123,10 @@ io.on('connection', function (socket) {
 
 
 
-	
+
     socket.on('clientSendBuffor', function (data) {
         if (!user.channel) return
-        socket.broadcast.to(user.channel.id).emit('serverSendBuffor', data)
+        socket.broadcast.to(user.channel.id).emit('serverSendBuffor', { "id": socket.id, "data": data })
     })
 
     socket.on('disconnect', function () {

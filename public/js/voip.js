@@ -8,12 +8,11 @@ function initVoip() {
     const speaker = audioContext.destination;
     const processor = audioContext.createScriptProcessor(4096, 1, 1);
 	
-	var id;
+	var id = socketController.socket.id
 
-	socketController.socket.on('id_for_client', function (data) {
-    
-        id = data;		
-    });
+	//socketController.socket.on('id_for_client', function (data) {
+    //    id = data;		
+    //});
 
     if (navigator.getUserMedia) {
         captureMicrophone();
@@ -27,8 +26,7 @@ function initVoip() {
             const inputData = inputBuffer.getChannelData(0);
     
             var encodedData = Codec.encode(inputData);
-					
-            socketController.socket.emit('clientSendBuffor', {id: id, data: encodedData});
+            socketController.socket.emit('clientSendBuffor', encodedData);
         };
     
         const microphoneStream = stream => {
