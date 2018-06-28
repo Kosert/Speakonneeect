@@ -38,15 +38,12 @@ var userList = []
 const adminList = []
 
 //adminServer.on('message', function (newAdmin) {
- //   console.log("new Admin: ", newAdmin)
+//   console.log("new Admin: ", newAdmin)
 //   adminList.push(newAdmin)
 //})
 
 io.on('connection', function (socket) {
     console.log(socket.client.id, '- connected')
-    //var newId = socket.client.id;	
-    //io.to(newId).emit('id_for_client', newId);
-
 
     var user = {
         userId: socket.client.id,

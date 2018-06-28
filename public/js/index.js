@@ -1,9 +1,5 @@
 window.onload = function () {
 
-    if (!localStorage.userName) {
-        changeUserName()
-    }
-
     new Promise(initializeSocket).then(function () {
         var buttonUsername = document.getElementById("buttonUsername")
         buttonUsername.addEventListener("click", function (e) {

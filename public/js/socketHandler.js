@@ -25,9 +25,8 @@ function initializeSocket(resolve, reject) {
 }
 
 function createSocket(options) {
-    //var url = [location.protocol, '//', location.host, location.pathname].join('');
-
-    var url = "http://127.0.0.1:8080"
+    var url = [location.protocol, '//', location.host, location.pathname].join('');
+    //var url = "https://localhost:8080"
     var socket = io(url, options)
     socketController.socket = socket
 

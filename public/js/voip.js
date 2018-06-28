@@ -2,6 +2,11 @@ function initVoip() {
 
     var script = document.createElement('script');
     script.onload = function () {
+
+        if (!localStorage.userName) {
+            changeUserName()
+        }
+
         var config = { 'worker_path': 'js/worker.min.js' }
         AudioRecorder.init(config);
 
@@ -11,10 +16,6 @@ function initVoip() {
         const processor = audioContext.createScriptProcessor(4096, 1, 1);
 
         var id = socketController.socket.id
-
-        //socketController.socket.on('id_for_client', function (data) {
-        //    id = data;		
-        //});
 
         if (navigator.getUserMedia) {
             captureMicrophone();
