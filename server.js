@@ -11,7 +11,8 @@ config.loadConfig()
 
 //var httpsOptions = {
 //    key: fs.readFileSync(config.getConfig.httpsOptions.key),
-//    cert: fs.readFileSync(config.getConfig.httpsOptions.cert)
+//    cert: fs.readFileSync(config.getConfig.httpsOptions.cert),
+//    crl: fs.readFileSync('ca-crl.pem'), 
 //}
 
 //var server = require('https').createServer(httpsOptions, app)

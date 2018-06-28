@@ -27,7 +27,15 @@ window.onload = function () {
             sendContent.value = ""
         })
 
-        initVoip()
+        var main = document.getElementById("main")
+        var xd = document.getElementById("XD")
+        var xdButton = document.getElementById("xdButton")
+
+        xdButton.addEventListener('click', function() {
+            xd.hidden = true
+            main.hidden = false
+            initVoip()
+        })
 
         console.log('Init completed')
     })
