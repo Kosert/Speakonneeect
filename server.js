@@ -12,7 +12,6 @@ config.loadConfig()
 //var httpsOptions = {
 //    key: fs.readFileSync(config.getConfig.httpsOptions.key),
 //    cert: fs.readFileSync(config.getConfig.httpsOptions.cert),
-//    crl: fs.readFileSync('ca-crl.pem'), 
 //}
 
 //var server = require('https').createServer(httpsOptions, app)
@@ -31,16 +30,6 @@ server.listen(8080, () => {
 })
 
 var userList = []
-
-//var fork = require('child_process').fork
-//var adminServer = fork(__dirname + '/adminServer.js')
-
-const adminList = []
-
-//adminServer.on('message', function (newAdmin) {
-//   console.log("new Admin: ", newAdmin)
-//   adminList.push(newAdmin)
-//})
 
 io.on('connection', function (socket) {
     console.log(socket.client.id, '- connected')

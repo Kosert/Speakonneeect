@@ -55,7 +55,7 @@ var channels = {
         li.appendChild(nameNode)
 
         var span = document.createElement("span")
-        span.classList.add("badge", "badge-dark", "badge-pill")
+        span.classList.add("badge", "badge-success", "badge-pill")
         span.innerText = channel.users + " users"
         li.appendChild(span)
 
@@ -74,9 +74,9 @@ var channels = {
         for (var i = 0; i < ul.children.length; i++) {
             var li = ul.children[i]
             var id = li.getAttribute("data-id")
-            li.classList.remove("list-group-item-dark")
+            li.classList.remove("list-group-item-success")
             if (this.currentChannelId == id) {
-                li.classList.add("list-group-item-dark")
+                li.classList.add("list-group-item-success")
             }
         }
         this.refreshChannelDetails()

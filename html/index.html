@@ -6,15 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Speakonnect</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="img/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
         crossorigin="anonymous">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
     <script src="js/index.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/socketHandler.js"></script>
-    <script src="js/voip.js"></script>
-    <!--<script src="js/audiorecorder.min.js"></script>-->
     <style>
         .channel-element {
             cursor: pointer;
@@ -25,8 +22,8 @@
         }
 
         .form-control:focus {
-            border-color: #343a40;
-            box-shadow: 0 0 0 0.2rem #343a4080
+		    border-color: #28a745;
+			box-shadow: 0 0 0 0.2rem #28a74580;
         }
     </style>
 </head>
@@ -34,18 +31,18 @@
 <body>
     <div class="jumbotron jumbotron-fluid pb-0" style="position:relative;padding-top:40vh">
         <div class="container">
-            <img src="img/logo.png" style="position: absolute;bottom:0px;width:80%;right:10%;">
+            <img src="img/logo.png" style="position: absolute;bottom:0px;width:50%;right:25%;">
         </div>
     </div>
     <div id="XD" class="container">
-        <a id="xdButton" class="btn btn-dark btn-lg btn-block" href="#">Start</a>        
+        <a id="xdButton" class="btn btn-success btn-lg btn-block" href="#">Start</a>        
     </div>
 
     <div id="main" class="container border rounded p-2" hidden>
         <div class="row mx-0" style="position: relative;">
-            <a id="buttonUsername" class="btn btn-outline-dark mr-1" href="#">Set Name</a>
-            <a class="btn btn-dark mr-1" href="https://localhost:8443/">Admin Panel</a>
-            <a class="btn btn-dark mr-1" href="https://github.com/Kosert/Speakonneeect" target="_blank" style="position: absolute;right:0">Check it out at GitHub</a>
+            <a id="buttonUsername" class="btn btn-outline-success mr-1" href="#">Set Name</a>
+            <a class="btn btn-success mr-1" href="XD">XD</a>
+            <a class="btn btn-success mr-1" target="_blank" style="position: absolute;right:0" href="XD">XD</a>
         </div>
         <div class="row">
             <div class="col-md-6">
@@ -70,7 +67,7 @@
                 <div class="input-group">
                     <input id="sendContent" type="text" class="form-control" autocomplete="off" placeholder="Enter message">
                     <div class="input-group-append">
-                        <button id="sendButton" class="btn btn-outline-dark" type="button">Send</button>
+                        <button id="sendButton" class="btn btn-outline-success" type="button">Send</button>
                     </div>
                 </div>
             </div>

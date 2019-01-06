@@ -30,7 +30,6 @@ window.onload = function () {
         xdButton.addEventListener('click', function() {
             xd.hidden = true
             main.hidden = false
-            initVoip()
         })
 
         console.log('Init completed')

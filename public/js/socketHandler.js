@@ -109,7 +109,7 @@ var socketController = {
         }
     },
 
-    sendBuffor: function (encodedData) {
-        this.socket.emit('clientSendBuffor', encodedData)
-    }
+    //sendBuffor: function (encodedData) {
+    //    this.socket.emit('clientSendBuffor', encodedData)
+    //}
 }
